@@ -18,7 +18,7 @@ public class SExpression {
         // Inhibit construction of utility class.
     }
 
-    private static Object parse(Reader r, AtomicInteger offset, List<Object> parent) throws IOException, ParseException {
+    private static Object parse(Reader r, AtomicInteger offset, boolean hasParent) throws IOException, ParseException {
         boolean quoted = false;
         List<Object> currentList = new ArrayList<>();
         StringBuilder currentAtom = new StringBuilder();
@@ -31,9 +31,9 @@ public class SExpression {
                     throw new ParseException("unexpected ( inside token starting with " + currentAtom, offset.get() - 1);
                 }
 
-                currentList.add(parse(r, offset, currentList));
+                currentList.add(parse(r, offset, true));
             } else if (c == ')') {
-                if (parent == null) {
+                if (!hasParent) {
                     throw new ParseException("unexpected )", offset.get() - 1);
                 }
 
@@ -107,7 +107,7 @@ public class SExpression {
      */
     public static Object parse(String s) throws ParseException {
         try {
-            Object parsed = parse(new StringReader(s), new AtomicInteger(), null);
+            Object parsed = parse(new StringReader(s), new AtomicInteger(), false);
             System.out.printf("source='%s' parsed='%s'\n", s, SExpression.toCharSequence(parsed));
             return parsed;
         } catch (IOException e) {
