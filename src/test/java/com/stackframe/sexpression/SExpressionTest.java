@@ -25,6 +25,11 @@ public class SExpressionTest {
     }
 
     @Test
+    public void testEmptyString() throws ParseException {
+        assertEquals(Collections.emptyList(), SExpression.parse(""));
+    }
+
+    @Test
     public void testEmptyList() throws ParseException {
         assertEquals(Collections.singletonList(Collections.emptyList()), SExpression.parse("()"));
     }

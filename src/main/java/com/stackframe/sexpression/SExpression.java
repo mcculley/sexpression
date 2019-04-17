@@ -76,7 +76,11 @@ public class SExpression {
         }
 
         if (l.isEmpty()) {
-            return atom.toString();
+            if (atom == null) {
+                return Collections.emptyList();
+            } else {
+                return atom.toString();
+            }
         } else {
             return Collections.unmodifiableList(l);
         }
