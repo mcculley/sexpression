@@ -19,8 +19,14 @@ public class SExpression {
 
     private static boolean isInteger(CharSequence s) {
         int length = s.length();
-        for (int i = 0; i < length; i++) {
-            char c = s.charAt(i);
+        int i = 0;
+        char c = s.charAt(i);
+        if (c == '-') {
+            i++;
+        }
+
+        for (; i < length; i++) {
+            c = s.charAt(i);
             if (!Character.isDigit(c)) {
                 return false;
             }
