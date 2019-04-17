@@ -113,7 +113,7 @@ public class SExpression {
     /**
      * Parse a String into a list of S-expressions.
      *
-     * @param s
+     * @param s the String to parse
      * @return an Object representing a list of S-expressions
      * @throws ParseException if the String does not represent a legal S-expression
      */
