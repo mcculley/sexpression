@@ -20,7 +20,7 @@ public class SExpression {
 
     private static Object parse(Reader r, AtomicInteger offset, List<Object> parent) throws IOException, ParseException {
         boolean quoted = false;
-        List<Object> currentList = null;
+        List<Object> currentList = new ArrayList<>();
         StringBuilder currentAtom = new StringBuilder();
         int i;
         while ((i = r.read()) != -1) {
@@ -31,10 +31,6 @@ public class SExpression {
                     throw new ParseException("unexpected ( inside token starting with " + currentAtom, offset.get() - 1);
                 }
 
-                if (currentList == null) {
-                    currentList = new ArrayList<>();
-                }
-
                 currentList.add(parse(r, offset, currentList));
             } else if (c == ')') {
                 if (parent == null) {
@@ -42,14 +38,10 @@ public class SExpression {
                 }
 
                 if (currentAtom.length() > 0) {
-                    if (currentList == null) {
-                        currentList = new ArrayList<>();
-                    }
-
                     currentList.add(currentAtom.toString());
                 }
 
-                if (currentList == null) {
+                if (currentList.isEmpty()) {
                     return Collections.emptyList();
                 } else {
                     return Collections.unmodifiableList(currentList);
@@ -59,10 +51,6 @@ public class SExpression {
                     currentAtom.append(c);
                 } else {
                     if (currentAtom.length() > 0) {
-                        if (currentList == null) {
-                            currentList = new ArrayList<>();
-                        }
-
                         currentList.add(currentAtom.toString());
                         currentAtom = new StringBuilder();
                     }
@@ -76,7 +64,7 @@ public class SExpression {
             }
         }
 
-        if (currentList == null) {
+        if (currentList.isEmpty()) {
             return currentAtom.toString();
         } else {
             return Collections.unmodifiableList(currentList);
