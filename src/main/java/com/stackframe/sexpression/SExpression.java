@@ -119,9 +119,7 @@ public class SExpression {
      */
     public static Object parse(String s) throws ParseException {
         try {
-            Object parsed = parse(new StringReader(s), new AtomicInteger(1), new AtomicInteger(), new AtomicInteger(), false);
-            System.out.printf("source='%s' parsed='%s'\n", s, SExpression.toCharSequence(parsed));
-            return parsed;
+            return parse(new StringReader(s), new AtomicInteger(1), new AtomicInteger(), new AtomicInteger(), false);
         } catch (IOException e) {
             // We cannot get an IOException when reading from String.
             throw new AssertionError(e);
