@@ -21,14 +21,14 @@ public class SExpression {
     private static Object parse(Reader r, AtomicInteger offset, boolean hasParent) throws IOException, ParseException {
         boolean quoted = false;
         List<Object> l = new ArrayList<>();
-        StringBuilder currentAtom = new StringBuilder();
+        StringBuilder atom = null;
         int i;
         while ((i = r.read()) != -1) {
             offset.incrementAndGet();
             char c = (char)i;
             if (c == '(') {
-                if (currentAtom.length() > 0) {
-                    throw new ParseException("unexpected ( inside token starting with " + currentAtom, offset.get() - 1);
+                if (atom != null) {
+                    throw new ParseException("unexpected ( inside token starting with " + atom, offset.get() - 1);
                 }
 
                 l.add(parse(r, offset, true));
@@ -37,8 +37,8 @@ public class SExpression {
                     throw new ParseException("unexpected )", offset.get() - 1);
                 }
 
-                if (currentAtom.length() > 0) {
-                    l.add(currentAtom.toString());
+                if (atom != null) {
+                    l.add(atom.toString());
                 }
 
                 if (l.isEmpty()) {
@@ -48,11 +48,11 @@ public class SExpression {
                 }
             } else if (c == ' ' || c == '\n') {
                 if (quoted) {
-                    currentAtom.append(c);
+                    atom.append(c);
                 } else {
-                    if (currentAtom.length() > 0) {
-                        l.add(currentAtom.toString());
-                        currentAtom = new StringBuilder();
+                    if (atom != null) {
+                        l.add(atom.toString());
+                        atom = null;
                     }
                 }
             } else if (c == '\r') {
@@ -60,12 +60,16 @@ public class SExpression {
             } else if (c == '\"') {
                 quoted = !quoted;
             } else {
-                currentAtom.append(c);
+                if (atom == null) {
+                    atom = new StringBuilder();
+                }
+
+                atom.append(c);
             }
         }
 
         if (l.isEmpty()) {
-            return currentAtom.toString();
+            return atom.toString();
         } else {
             return Collections.unmodifiableList(l);
         }
