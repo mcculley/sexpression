@@ -62,11 +62,9 @@ public class SExpression {
                         atom = null;
                     }
                 }
-            } else if (c == '\r') {
-                // Ignore. We assume we will get a \n right after for DOS files.
             } else if (c == '\"') {
                 quoted = !quoted;
-            } else {
+            } else if (c != '\r') { // Ignore carriage return. We assume we will get a \n right after for DOS files.
                 if (atom == null) {
                     atom = new StringBuilder();
                 }
