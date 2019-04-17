@@ -1,7 +1,7 @@
 package com.stackframe.sexpression;
 
 import java.io.IOException;
-import java.io.PushbackReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class SExpression {
         // Inhibit construction of utility class.
     }
 
-    private static Object parse(PushbackReader r, AtomicInteger offset, List<Object> parent) throws IOException, ParseException {
+    private static Object parse(Reader r, AtomicInteger offset, List<Object> parent) throws IOException, ParseException {
         boolean quoted = false;
         List<Object> currentList = null;
         StringBuilder currentAtom = new StringBuilder();
@@ -36,8 +36,6 @@ public class SExpression {
                 }
 
                 currentList.add(parse(r, offset, currentList));
-                r.read();
-                offset.incrementAndGet();
             } else if (c == ')') {
                 if (parent == null) {
                     throw new ParseException("unexpected )", offset.get() - 1);
@@ -51,8 +49,6 @@ public class SExpression {
                     currentList.add(currentAtom.toString());
                 }
 
-                r.unread(c);
-                offset.decrementAndGet();
                 if (currentList == null) {
                     return Collections.emptyList();
                 } else {
@@ -123,7 +119,7 @@ public class SExpression {
      */
     public static Object parse(String s) throws ParseException {
         try {
-            Object parsed = parse(new PushbackReader(new StringReader(s)), new AtomicInteger(), null);
+            Object parsed = parse(new StringReader(s), new AtomicInteger(), null);
             System.out.printf("source='%s' parsed='%s'\n", s, SExpression.toCharSequence(parsed));
             return parsed;
         } catch (IOException e) {
