@@ -17,6 +17,26 @@ public class SExpression {
         // Inhibit construction of utility class.
     }
 
+    private static boolean isInteger(CharSequence s) {
+        int length = s.length();
+        for (int i = 0; i < length; i++) {
+            char c = s.charAt(i);
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static Object box(String s) {
+        if (isInteger(s)) {
+            return new Long(s);
+        } else {
+            return s;
+        }
+    }
+
     private static Object parse(Reader r, AtomicInteger line, AtomicInteger column, AtomicInteger offset,
                                 boolean hasParent) throws IOException, ParseException {
         boolean quoted = false;
@@ -40,7 +60,7 @@ public class SExpression {
                 }
 
                 if (atom != null) {
-                    l.add(atom.toString());
+                    l.add(box(atom.toString()));
                 }
 
                 if (l.isEmpty()) {
@@ -81,7 +101,7 @@ public class SExpression {
             if (atom == null) {
                 return Collections.emptyList();
             } else {
-                return atom.toString();
+                return box(atom.toString());
             }
         } else {
             return Collections.unmodifiableList(l);
