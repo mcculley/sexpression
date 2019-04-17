@@ -70,7 +70,7 @@ public class SExpressionTest {
         String source = "(foo bar \"baz buzz\" fuzz)";
         Object parsed = SExpression.parse(source);
         assertEquals(Arrays.asList(Arrays.asList("foo", "bar", "baz buzz", "fuzz")), parsed);
-        assertEquals(source, SExpression.toString(((List)parsed).get(0)));
+        assertEquals(source, SExpression.toCharSequence(((List)parsed).get(0)).toString());
     }
 
     @Test

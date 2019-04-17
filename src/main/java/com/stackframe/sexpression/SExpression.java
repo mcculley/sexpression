@@ -93,7 +93,7 @@ public class SExpression {
      * @param e the object to convert
      * @return a human readable S-expression
      */
-    public static CharSequence toString(Object e) {
+    public static CharSequence toCharSequence(Object e) {
         StringBuilder b = new StringBuilder();
         if (e instanceof String) {
             if (((String)e).contains(" ")) {
@@ -105,13 +105,13 @@ public class SExpression {
             }
         } else if (e instanceof List) {
             b.append('(');
-            b.append(String.join(" ", ((List<?>)e).stream().map(SExpression::toString)::iterator));
+            b.append(String.join(" ", ((List<?>)e).stream().map(SExpression::toCharSequence)::iterator));
             b.append(')');
         } else {
             throw new IllegalArgumentException("unexpected type in s-expression: " + e.getClass().getName());
         }
 
-        return b.toString();
+        return b;
     }
 
     /**
@@ -124,7 +124,7 @@ public class SExpression {
     public static Object parse(String s) throws ParseException {
         try {
             Object parsed = parse(new PushbackReader(new StringReader(s)), new AtomicInteger(), null);
-            System.out.printf("source='%s' parsed='%s'\n", s, SExpression.toString(parsed));
+            System.out.printf("source='%s' parsed='%s'\n", s, SExpression.toCharSequence(parsed));
             return parsed;
         } catch (IOException e) {
             // We cannot get an IOException when reading from String.
