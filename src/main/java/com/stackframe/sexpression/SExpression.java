@@ -108,7 +108,7 @@ public class SExpression {
             b.append(String.join(" ", ((List<?>)e).stream().map(SExpression::toCharSequence)::iterator));
             b.append(')');
         } else {
-            throw new IllegalArgumentException("unexpected type in s-expression: " + e.getClass().getName());
+            throw new IllegalArgumentException("unexpected type in S-expression: " + e.getClass().getName());
         }
 
         return b;
