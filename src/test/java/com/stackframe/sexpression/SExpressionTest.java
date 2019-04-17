@@ -143,5 +143,6 @@ public class SExpressionTest {
     // See https://github.com/WebAssembly/spec/blob/master/interpreter/README.md#s-expression-syntax for grammar
     // FIXME: Need to throw parse exception if reading any weird control character.
     // FIXME: Handle Unicode characters for atoms and strings.
+    // FIXME: Handle scientific notation?
 
 }
