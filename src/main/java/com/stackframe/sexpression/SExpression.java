@@ -165,8 +165,8 @@ public class SExpression {
      * Parse a String into a list of S-expressions.
      *
      * @param s the String to parse
-     * @return an Object or a list of parsed S-expressions. If the string is a single atom, it will be returned as an Object. For
-     * each parsed S-expression, the Object will either be a String or a List, recursively.
+     * @return an Object or a List of parsed S-expressions. If the string is a single atom, it will be returned as a String,
+     * Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
      * @throws ParseException if the String does not represent a legal S-expression
      */
     public static Object parse(String s) throws ParseException {
