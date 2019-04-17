@@ -53,7 +53,11 @@ public class SExpression {
 
                 r.unread(c);
                 offset.decrementAndGet();
-                return Collections.unmodifiableList(currentList);
+                if (currentList == null) {
+                    return Collections.emptyList();
+                } else {
+                    return Collections.unmodifiableList(currentList);
+                }
             } else if (c == ' ' || c == '\n') {
                 if (quoted) {
                     currentAtom.append(c);

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,6 +23,11 @@ public class SExpressionTest {
     @Test
     public void testSingleAtomList() throws ParseException {
         assertEquals(Arrays.asList(Arrays.asList("foo")), SExpression.parse("(foo)"));
+    }
+
+    @Test
+    public void testEmptyList() throws ParseException {
+        assertEquals(Collections.singletonList(Collections.emptyList()), SExpression.parse("()"));
     }
 
     @Test
