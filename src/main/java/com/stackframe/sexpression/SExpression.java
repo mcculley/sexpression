@@ -118,7 +118,7 @@ public class SExpression {
      * Parse a String into a list of S-expressions.
      *
      * @param s the String to parse
-     * @return an Object representing a list of S-expressions
+     * @return an Object or a list of parsed S-expressions. If the string is a single atom, it will be returned as an Object.
      * @throws ParseException if the String does not represent a legal S-expression
      */
     public static Object parse(String s) throws ParseException {
