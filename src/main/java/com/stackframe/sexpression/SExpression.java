@@ -18,7 +18,7 @@ public class SExpression {
         // Inhibit construction of utility class.
     }
 
-    private static Object parse(PushbackReader r, AtomicInteger offset, List parent) throws IOException, ParseException {
+    private static Object parse(PushbackReader r, AtomicInteger offset, List<Object> parent) throws IOException, ParseException {
         boolean quoted = false;
         List<Object> currentList = null;
         StringBuilder currentAtom = new StringBuilder();
