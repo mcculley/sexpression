@@ -60,6 +60,20 @@ public class SExpressionTest {
     }
 
     @Test
+    public void testExtraClose2() {
+        ParseException e = assertThrows(ParseException.class, () -> SExpression.parse("(foo bar (baz)) buzz)"));
+        assertEquals("unexpected )", e.getMessage());
+        assertEquals(20, e.getErrorOffset());
+    }
+
+    @Test
+    public void testExtraClose3() {
+        ParseException e = assertThrows(ParseException.class, () -> SExpression.parse("(foo bar (baz) ) buzz)"));
+        assertEquals("unexpected )", e.getMessage());
+        assertEquals(21, e.getErrorOffset());
+    }
+
+    @Test
     public void testUnquoted() throws ParseException {
         assertEquals(Arrays.asList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
                      SExpression.parse("(foo bar baz buzz fuzz)"));
