@@ -21,7 +21,7 @@ public class SExpressionTest {
 
     @Test
     public void testSingleAtomList() throws ParseException {
-        assertEquals(Arrays.asList(Arrays.asList("foo")), SExpression.parse("(foo)"));
+        assertEquals(Collections.singletonList(Collections.singletonList("foo")), SExpression.parse("(foo)"));
     }
 
     @Test
@@ -36,12 +36,13 @@ public class SExpressionTest {
 
     @Test
     public void testTwoSingleAtomLists() throws ParseException {
-        assertEquals(Arrays.asList(Arrays.asList("foo"), Arrays.asList("bar")), SExpression.parse("(foo) (bar)"));
+        assertEquals(Arrays.asList(Collections.singletonList("foo"), Collections.singletonList("bar")),
+                     SExpression.parse("(foo) (bar)"));
     }
 
     @Test
     public void testTwoAtomsInOneList() throws ParseException {
-        assertEquals(Arrays.asList(Arrays.asList("foo", "bar")), SExpression.parse("(foo bar)"));
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar")), SExpression.parse("(foo bar)"));
     }
 
     @Test
@@ -53,7 +54,8 @@ public class SExpressionTest {
 
     @Test
     public void testNestedLists() throws ParseException {
-        assertEquals(Arrays.asList(Arrays.asList("foo", "bar", Arrays.asList("baz"))), SExpression.parse("(foo bar (baz))"));
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", Collections.singletonList("baz"))),
+                     SExpression.parse("(foo bar (baz))"));
     }
 
     @Test
@@ -83,8 +85,7 @@ public class SExpressionTest {
 
     @Test
     public void testExtraClose4() {
-        ParseException e =
-                assertThrows(ParseException.class, () -> SExpression.parse("(foo \nbar \n(baz) ) buzz)"));
+        ParseException e = assertThrows(ParseException.class, () -> SExpression.parse("(foo \nbar \n(baz) ) buzz)"));
         assertEquals("unexpected )", e.getMessage());
         assertEquals(23, e.getErrorOffset());
         assertEquals(3, e.getErrorLine());
@@ -93,7 +94,7 @@ public class SExpressionTest {
 
     @Test
     public void testUnquoted() throws ParseException {
-        assertEquals(Arrays.asList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
                      SExpression.parse("(foo bar baz buzz fuzz)"));
     }
 
@@ -101,19 +102,19 @@ public class SExpressionTest {
     public void testQuoted() throws ParseException {
         String source = "(foo bar \"baz buzz\" fuzz)";
         Object parsed = SExpression.parse(source);
-        assertEquals(Arrays.asList(Arrays.asList("foo", "bar", "baz buzz", "fuzz")), parsed);
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz buzz", "fuzz")), parsed);
         assertEquals(source, SExpression.toCharSequence(((List)parsed).get(0)).toString());
     }
 
     @Test
     public void testNewLine() throws ParseException {
-        assertEquals(Arrays.asList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
                      SExpression.parse("(foo bar baz\nbuzz fuzz)"));
     }
 
     @Test
     public void testDOSNewLine() throws ParseException {
-        assertEquals(Arrays.asList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
                      SExpression.parse("(foo bar baz\r\nbuzz fuzz)"));
     }
 
