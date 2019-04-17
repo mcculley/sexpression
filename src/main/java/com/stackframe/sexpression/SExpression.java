@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A utility class for parsing s-expressions.
+ * A utility class for parsing S-expressions.
  */
 public class SExpression {
 
