@@ -3,7 +3,6 @@ package com.stackframe.sexpression;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,23 +17,26 @@ public class SExpression {
         // Inhibit construction of utility class.
     }
 
-    private static Object parse(Reader r, AtomicInteger offset, boolean hasParent) throws IOException, ParseException {
+    private static Object parse(Reader r, AtomicInteger line, AtomicInteger column, AtomicInteger offset,
+                                boolean hasParent) throws IOException, ParseException {
         boolean quoted = false;
         List<Object> l = new ArrayList<>();
         StringBuilder atom = null;
         int i;
         while ((i = r.read()) != -1) {
             offset.incrementAndGet();
+            column.incrementAndGet();
             char c = (char)i;
             if (c == '(') {
                 if (atom != null) {
-                    throw new ParseException("unexpected ( inside token starting with " + atom, offset.get() - 1);
+                    throw new ParseException("unexpected ( inside token starting with " + atom, offset.get() - 1, line.get(),
+                                             column.get());
                 }
 
-                l.add(parse(r, offset, true));
+                l.add(parse(r, line, column, offset, true));
             } else if (c == ')') {
                 if (!hasParent) {
-                    throw new ParseException("unexpected )", offset.get() - 1);
+                    throw new ParseException("unexpected )", offset.get() - 1, line.get(), column.get());
                 }
 
                 if (atom != null) {
@@ -47,6 +49,11 @@ public class SExpression {
                     return Collections.unmodifiableList(l);
                 }
             } else if (c == ' ' || c == '\n') {
+                if (c == '\n') {
+                    line.incrementAndGet();
+                    column.set(0);
+                }
+
                 if (quoted) {
                     atom.append(c);
                 } else {
@@ -111,7 +118,7 @@ public class SExpression {
      */
     public static Object parse(String s) throws ParseException {
         try {
-            Object parsed = parse(new StringReader(s), new AtomicInteger(), false);
+            Object parsed = parse(new StringReader(s), new AtomicInteger(1), new AtomicInteger(), new AtomicInteger(), false);
             System.out.printf("source='%s' parsed='%s'\n", s, SExpression.toCharSequence(parsed));
             return parsed;
         } catch (IOException e) {

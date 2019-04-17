@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -64,6 +63,8 @@ public class SExpressionTest {
         ParseException e = assertThrows(ParseException.class, () -> SExpression.parse("(foo bar (baz)) buzz)"));
         assertEquals("unexpected )", e.getMessage());
         assertEquals(20, e.getErrorOffset());
+        assertEquals(1, e.getErrorLine());
+        assertEquals(21, e.getErrorColumn());
     }
 
     @Test
@@ -71,6 +72,18 @@ public class SExpressionTest {
         ParseException e = assertThrows(ParseException.class, () -> SExpression.parse("(foo bar (baz) ) buzz)"));
         assertEquals("unexpected )", e.getMessage());
         assertEquals(21, e.getErrorOffset());
+        assertEquals(1, e.getErrorLine());
+        assertEquals(22, e.getErrorColumn());
+    }
+
+    @Test
+    public void testExtraClose4() {
+        ParseException e =
+                assertThrows(ParseException.class, () -> SExpression.parse("(foo \nbar \n(baz) ) buzz)"));
+        assertEquals("unexpected )", e.getMessage());
+        assertEquals(23, e.getErrorOffset());
+        assertEquals(3, e.getErrorLine());
+        assertEquals(13, e.getErrorColumn());
     }
 
     @Test
