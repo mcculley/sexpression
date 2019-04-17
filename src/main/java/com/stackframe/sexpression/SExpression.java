@@ -9,7 +9,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * A utility class for parsing s-expressions.
+ */
 public class SExpression {
+
+    private SExpression() {
+        // Inhibit construction of utility class.
+    }
 
     private static Object parse(PushbackReader r, AtomicInteger offset, List parent) throws IOException, ParseException {
         boolean quoted = false;
@@ -76,6 +83,12 @@ public class SExpression {
         }
     }
 
+    /**
+     * Convert an object into a human readable S-expression.
+     *
+     * @param e the object to convert
+     * @return a human readable S-expression
+     */
     public static String toString(Object e) {
         StringBuilder b = new StringBuilder();
         if (e instanceof String) {
@@ -97,6 +110,13 @@ public class SExpression {
         return b.toString();
     }
 
+    /**
+     * Parse a String into a list of S-expressions.
+     *
+     * @param s
+     * @return an Object representing a list of S-expressions
+     * @throws ParseException if the String does not represent a legal S-expression
+     */
     public static Object parse(String s) throws ParseException {
         try {
             Object parsed = parse(new PushbackReader(new StringReader(s)), new AtomicInteger(), null);
