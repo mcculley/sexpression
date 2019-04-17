@@ -107,6 +107,14 @@ public class SExpressionTest {
     }
 
     @Test
+    public void testQuoted2() throws ParseException {
+        String source = "(foo bar \" baz buzz\" fuzz)";
+        Object parsed = SExpression.parse(source);
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", " baz buzz", "fuzz")), parsed);
+        assertEquals(source, SExpression.toCharSequence(((List)parsed).get(0)).toString());
+    }
+
+    @Test
     public void testNewLine() throws ParseException {
         assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
                      SExpression.parse("(foo bar baz\nbuzz fuzz)"));

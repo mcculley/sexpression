@@ -55,6 +55,10 @@ public class SExpression {
                 }
 
                 if (quoted) {
+                    if (atom == null) {
+                        atom = new StringBuilder();
+                    }
+
                     atom.append(c);
                 } else {
                     if (atom != null) {
