@@ -56,6 +56,16 @@ public class SExpressionTest {
     }
 
     @Test
+    public void testFloat() throws ParseException {
+        assertEquals(Collections.singletonList(Arrays.asList("foo", new Double(12.5))), SExpression.parse("(foo 12.5)"));
+    }
+
+    @Test
+    public void testNegativeFloat() throws ParseException {
+        assertEquals(Collections.singletonList(Arrays.asList("foo", new Double(-12.5))), SExpression.parse("(foo -12.5)"));
+    }
+
+    @Test
     public void testBadToken() {
         ParseException e = assertThrows(ParseException.class, () -> SExpression.parse("(foo bar baz() buzz)"));
         assertEquals("unexpected ( inside token starting with baz", e.getMessage());

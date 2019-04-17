@@ -35,9 +35,29 @@ public class SExpression {
         return true;
     }
 
+    private static boolean isFloat(CharSequence s) {
+        int length = s.length();
+        int i = 0;
+        char c = s.charAt(i);
+        if (c == '-') {
+            i++;
+        }
+
+        for (; i < length; i++) {
+            c = s.charAt(i);
+            if (!(Character.isDigit(c) || c == '.')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private static Object box(String s) {
         if (isInteger(s)) {
             return new Long(s);
+        } else if (isFloat(s)) {
+            return new Double(s);
         } else {
             return s;
         }
