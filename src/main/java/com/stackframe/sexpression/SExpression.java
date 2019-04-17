@@ -89,9 +89,9 @@ public class SExpression {
     }
 
     /**
-     * Convert an object into a human readable S-expression.
+     * Convert an Object into a human readable S-expression.
      *
-     * @param e the object to convert
+     * @param e the Object to convert
      * @return a human readable S-expression
      */
     public static CharSequence toCharSequence(Object e) {
