@@ -93,7 +93,7 @@ public class SExpression {
      * @param e the object to convert
      * @return a human readable S-expression
      */
-    public static String toString(Object e) {
+    public static CharSequence toString(Object e) {
         StringBuilder b = new StringBuilder();
         if (e instanceof String) {
             if (((String)e).contains(" ")) {
@@ -105,7 +105,7 @@ public class SExpression {
             }
         } else if (e instanceof List) {
             b.append('(');
-            b.append(String.join(" ", ((List)e).stream().map(x -> toString(x))::iterator));
+            b.append(String.join(" ", ((List<?>)e).stream().map(SExpression::toString)::iterator));
             b.append(')');
         } else {
             throw new IllegalArgumentException("unexpected type in s-expression: " + e.getClass().getName());
