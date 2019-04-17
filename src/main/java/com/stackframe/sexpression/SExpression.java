@@ -20,7 +20,7 @@ public class SExpression {
 
     private static Object parse(PushbackReader r, AtomicInteger offset, List parent) throws IOException, ParseException {
         boolean quoted = false;
-        List currentList = null;
+        List<Object> currentList = null;
         StringBuilder currentAtom = new StringBuilder();
         int i;
         while ((i = r.read()) != -1) {
