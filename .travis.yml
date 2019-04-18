@@ -1,6 +1,6 @@
 language: java
 
-script: "mvn package --batch-mode"
+script: "mvn --batch-mode package sonar:sonar"
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
