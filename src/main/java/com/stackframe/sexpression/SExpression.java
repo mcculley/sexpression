@@ -26,9 +26,7 @@ package com.stackframe.sexpression;
  * #L%
  */
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -216,6 +214,21 @@ public class SExpression {
             // We cannot get an IOException when reading from String.
             throw new AssertionError(e);
         }
+    }
+
+    /**
+     * A simple command line utility to read in a file containing S-expressions, parse them, and print them out again for testing.
+     *
+     * @param args the command line arguments
+     * @throws Exception if anything goes wrong with reading or parsing
+     */
+    public static void main(String[] args) throws Exception {
+        if (args.length != 1) {
+            System.err.println("expected a single argument with a filename");
+            System.exit(-1);
+        }
+
+        System.out.println(toCharSequence(parse(new FileReader(args[0]))));
     }
 
 }
