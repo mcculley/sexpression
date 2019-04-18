@@ -162,6 +162,11 @@ public class SExpressionTest {
     }
 
     @Test
+    public void testBadObject() {
+        assertThrows(IllegalArgumentException.class, () -> SExpression.toCharSequence(Class.class));
+    }
+
+    @Test
     public void testNewLine() throws ParseException {
         assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
                      SExpression.parse("(foo bar baz\nbuzz fuzz)"));
