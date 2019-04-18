@@ -79,9 +79,9 @@ public class SExpression {
 
     private static Object box(String s) {
         if (isInteger(s)) {
-            return new Long(s);
+            return Long.valueOf(s);
         } else if (isFloat(s)) {
-            return new Double(s);
+            return Double.valueOf(s);
         } else {
             return s;
         }
