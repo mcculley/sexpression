@@ -176,6 +176,8 @@ public class SExpression {
             } else {
                 b.append(e);
             }
+        } else if (e instanceof Long || e instanceof Double) {
+            b.append(e);
         } else if (e instanceof List) {
             b.append('(');
             b.append(String.join(" ", ((List<?>)e).stream().map(SExpression::toCharSequence)::iterator));

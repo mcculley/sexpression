@@ -78,12 +78,22 @@ public class SExpressionTest {
     }
 
     @Test
+    public void testInteger2() throws ParseException {
+        assertEquals("12", SExpression.toCharSequence(SExpression.parse("12")).toString());
+    }
+
+    @Test
     public void testNegativeInteger() throws ParseException {
         assertEquals(Collections.singletonList(Arrays.asList("foo", new Long(-12))), SExpression.parse("(foo -12)"));
     }
 
     @Test
     public void testFloat() throws ParseException {
+        assertEquals("12.0", SExpression.toCharSequence(SExpression.parse("12.0")).toString());
+    }
+
+    @Test
+    public void testFloat2() throws ParseException {
         assertEquals(Collections.singletonList(Arrays.asList("foo", new Double(12.5))), SExpression.parse("(foo 12.5)"));
     }
 
