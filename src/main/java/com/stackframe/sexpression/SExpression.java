@@ -188,6 +188,18 @@ public class SExpression {
     }
 
     /**
+     * Parse a stream into a list of S-expressions.
+     *
+     * @param r a Reader to read from
+     * @return an Object or a List of parsed S-expressions. If the string is a single atom, it will be returned as a String,
+     * Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
+     * @throws ParseException if the String does not represent a legal S-expression
+     */
+    public static Object parse(Reader r) throws ParseException, IOException {
+        return parse(r, new AtomicInteger(1), new AtomicInteger(), new AtomicInteger(), false);
+    }
+
+    /**
      * Parse a String into a list of S-expressions.
      *
      * @param s the String to parse
@@ -197,7 +209,7 @@ public class SExpression {
      */
     public static Object parse(String s) throws ParseException {
         try {
-            return parse(new StringReader(s), new AtomicInteger(1), new AtomicInteger(), new AtomicInteger(), false);
+            return parse(new StringReader(s));
         } catch (IOException e) {
             // We cannot get an IOException when reading from String.
             throw new AssertionError(e);
