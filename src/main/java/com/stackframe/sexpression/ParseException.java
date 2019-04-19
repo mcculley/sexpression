@@ -32,7 +32,8 @@ package com.stackframe.sexpression;
  */
 public class ParseException extends java.text.ParseException {
 
-    private final int errorLine, errorColumn;
+    private final int errorLine;
+    private final int errorColumn;
 
     /**
      * Constructs a ParseException with the specified detail message, line, column, and offset. A detail message is a String that
