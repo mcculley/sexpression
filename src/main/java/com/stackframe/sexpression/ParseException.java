@@ -30,6 +30,7 @@ package com.stackframe.sexpression;
 /**
  * Signals that an error has been reached unexpectedly while parsing.
  */
+@SuppressWarnings("squid:S2176") // Suppress warning about this class having the same name as its parent.
 public class ParseException extends java.text.ParseException {
 
     private final int errorLine;
