@@ -222,6 +222,7 @@ public class SExpression {
      * @param args the command line arguments
      * @throws Exception if anything goes wrong with reading or parsing
      */
+    @SuppressWarnings("squid:S106") // Ignore Sonar warning about use of System.out and System.err.
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
             System.err.println("expected a single argument with a filename");
