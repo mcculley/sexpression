@@ -1,5 +1,9 @@
 language: java
 
+addons:
+  sonarcloud:
+    organization: "sonarcloud"
+
 script: "mvn --batch-mode package sonar:sonar"
 
 after_success:
