@@ -229,7 +229,9 @@ public class SExpression {
             System.exit(-1);
         }
 
-        System.out.println(toCharSequence(parse(new FileReader(args[0]))));
+        try (FileReader r = new FileReader(args[0])) {
+            System.out.println(toCharSequence(parse(r)));
+        }
     }
 
 }
