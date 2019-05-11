@@ -98,25 +98,42 @@ public class SExpression {
             column.incrementAndGet();
             char c = (char)i;
             if (c == '(') {
-                if (atom != null) {
-                    throw new ParseException("unexpected ( inside token starting with " + atom, offset.get() - 1, line.get(),
-                                             column.get());
-                }
+                if (quoted) {
+                    if (atom == null) {
+                        atom = new StringBuilder();
+                    }
 
-                l.add(parse(r, line, column, offset, true));
-            } else if (c == ')') {
-                if (!hasParent) {
-                    throw new ParseException("unexpected )", offset.get() - 1, line.get(), column.get());
-                }
-
-                if (atom != null) {
-                    l.add(box(atom.toString()));
-                }
-
-                if (l.isEmpty()) {
-                    return Collections.emptyList();
+                    atom.append(c);
                 } else {
-                    return Collections.unmodifiableList(l);
+                    if (atom != null) {
+                        throw new ParseException(String.format("unexpected ( inside token starting with \"%s\"", atom),
+                                                 offset.get() - 1, line.get(),
+                                                 column.get());
+                    }
+
+                    l.add(parse(r, line, column, offset, true));
+                }
+            } else if (c == ')') {
+                if (quoted) {
+                    if (atom == null) {
+                        atom = new StringBuilder();
+                    }
+
+                    atom.append(c);
+                } else {
+                    if (!hasParent) {
+                        throw new ParseException("unexpected )", offset.get() - 1, line.get(), column.get());
+                    }
+
+                    if (atom != null) {
+                        l.add(box(atom.toString()));
+                    }
+
+                    if (l.isEmpty()) {
+                        return Collections.emptyList();
+                    } else {
+                        return Collections.unmodifiableList(l);
+                    }
                 }
             } else if (c == ' ' || c == '\n') {
                 if (c == '\n') {

@@ -103,9 +103,14 @@ public class SExpressionTest {
     }
 
     @Test
+    public void testQuotedString() throws ParseException {
+        assertEquals("pachyderms (elephants)", SExpression.parse("\"pachyderms (elephants)\""));
+    }
+
+    @Test
     public void testBadToken() {
         ParseException e = assertThrows(ParseException.class, () -> SExpression.parse("(foo bar baz() buzz)"));
-        assertEquals("unexpected ( inside token starting with baz", e.getMessage());
+        assertEquals("unexpected ( inside token starting with \"baz\"", e.getMessage());
         assertEquals(12, e.getErrorOffset());
     }
 
