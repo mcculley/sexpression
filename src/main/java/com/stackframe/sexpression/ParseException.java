@@ -59,4 +59,9 @@ public class ParseException extends java.text.ParseException {
         return errorColumn;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%d:%d:%s", errorLine, errorColumn, getMessage());
+    }
+
 }
