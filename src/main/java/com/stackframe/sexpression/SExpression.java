@@ -135,7 +135,7 @@ public class SExpression {
                         return Collections.unmodifiableList(l);
                     }
                 }
-            } else if (c == ' ' || c == '\n') {
+            } else if (c == ' ' || c == '\n' || c == '\t') {
                 if (c == '\n') {
                     line.incrementAndGet();
                     column.set(0);

@@ -27,14 +27,14 @@ package com.stackframe.sexpression;
  */
 
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit test for SExpression.
@@ -105,6 +105,22 @@ public class SExpressionTest {
     @Test
     public void testQuotedString() throws ParseException {
         assertEquals("pachyderms (elephants)", SExpression.parse("\"pachyderms (elephants)\""));
+    }
+
+    @Test
+    public void testTabs() throws ParseException {
+        Object parsed = SExpression.parse("  (func (export \"i32_load8_s\") (param $i i32) (result i32)\n" +
+                                          "\t(i32.store8 (i32.const 8) (local.get $i))\n" +
+                                          "\t(i32.load8_s (i32.const 8))\n" +
+                                          "  )\n");
+        Object expected = Arrays.asList(
+                Arrays.asList("func", Arrays.asList("export", "i32_load8_s"), Arrays.asList("param", "$i", "i32"),
+                              Arrays.asList("result", "i32"),
+                              Arrays.asList("i32.store8", Collections
+                                                    .unmodifiableList(Arrays.asList("i32.const", Long.valueOf(8))),
+                                            Arrays.asList("local.get", "$i")),
+                              Arrays.asList("i32.load8_s", Arrays.asList("i32.const", Long.valueOf(8)))));
+        assertEquals(expected, parsed);
     }
 
     @Test
