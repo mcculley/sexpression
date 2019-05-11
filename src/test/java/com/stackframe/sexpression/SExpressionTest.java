@@ -214,9 +214,8 @@ public class SExpressionTest {
     // FIXME: Need to handle an escaped '('.
     // FIXME: Need to handle an escaped ')'.
     // FIXME: Need to handle an escaped ' '.
-    // FIXME: Need to keep track of line and column numbers.
     // FIXME: Need pretty printer.
-    // FIXME: Need to return integers as Integer or Long objects.
+    // FIXME: Need to return integers as Integer or Long objects?
     // FIXME: Need to return floats as Double objects.
     // FIXME: Any value in returning Unicode pi value as a special object?
     // FIXME: Any value in returning fractional numbers as some special object like Scheme's numeric tower does?
