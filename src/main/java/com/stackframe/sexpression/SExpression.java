@@ -234,20 +234,27 @@ public class SExpression {
     }
 
     /**
-     * A simple command line utility to read in a file containing S-expressions, parse them, and print them out again for testing.
+     * A simple command line utility to read in files containing S-expressions, parse them, and print them out again for testing.
      *
      * @param args the command line arguments
-     * @throws Exception if anything goes wrong with reading or parsing
+     * @throws Exception if anything goes wrong with reading
      */
     @SuppressWarnings("squid:S106") // Ignore Sonar warning about use of System.out and System.err.
     public static void main(String[] args) throws Exception {
-        if (args.length != 1) {
-            System.err.println("expected a single argument with a filename");
+        if (args.length < 1) {
+            System.err.println("expected filenames");
             System.exit(-1);
         }
 
-        try (FileReader r = new FileReader(args[0])) {
-            System.out.println(toCharSequence(parse(r)));
+        for (String arg : args) {
+            try {
+                try (FileReader r = new FileReader(arg)) {
+                    System.out.println(toCharSequence(parse(r)));
+                }
+            } catch (ParseException e) {
+                System.err.println(arg + ":" + e);
+                System.exit(-1);
+            }
         }
     }
 
