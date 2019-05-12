@@ -209,6 +209,36 @@ public class SExpressionTest {
                      SExpression.parse("(foo bar baz\r\nbuzz fuzz)"));
     }
 
+    @Test
+    public void testLineComment() throws ParseException {
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
+                     SExpression.parse("(foo bar baz;;27\nbuzz fuzz)"));
+    }
+
+    @Test
+    public void testBlockComment() throws ParseException {
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
+                     SExpression.parse("(foo bar baz (;comment;) buzz fuzz)"));
+    }
+
+    @Test
+    public void testNestedBlockComment() throws ParseException {
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
+                     SExpression.parse("(foo bar baz (;comment (;comment;) comment;) buzz fuzz)"));
+    }
+
+    @Test
+    public void testCombinedComment() throws ParseException {
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
+                     SExpression.parse("(foo bar baz ;;(;comment (;comment;) comment;)\n buzz fuzz)"));
+    }
+
+    @Test
+    public void testCombinedComment2() throws ParseException {
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
+                     SExpression.parse("(foo bar baz (;comment (;comment;) comment;);;comment\n buzz fuzz)"));
+    }
+
     // FIXME: Need to handle escape with '\' (or some other character).
     // FIXME: Need to handle an escaped '"'.
     // FIXME: Need to handle an escaped '('.
@@ -220,8 +250,6 @@ public class SExpressionTest {
     // FIXME: Any value in returning Unicode pi value as a special object?
     // FIXME: Any value in returning fractional numbers as some special object like Scheme's numeric tower does?
     // FIXME: Handle reading hexadecimal literals.
-    // FIXME: Need to support comment until end of line character.
-    // FIXME: Need to support block comment scheme.
     // See https://github.com/WebAssembly/spec/blob/master/interpreter/README.md#s-expression-syntax for grammar
     // FIXME: Need to throw parse exception if reading any weird control character.
     // FIXME: Handle Unicode characters for atoms and strings.

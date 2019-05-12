@@ -87,9 +87,10 @@ public class SExpression {
         }
     }
 
-    private static Object parse(Reader r, AtomicInteger line, AtomicInteger column, AtomicInteger offset,
+    private static Object parse(PushbackReader r, AtomicInteger line, AtomicInteger column, AtomicInteger offset,
                                 boolean hasParent) throws IOException, ParseException {
         boolean quoted = false;
+        boolean inLineComment = false;
         List<Object> l = new ArrayList<>();
         StringBuilder atom = null;
         int i;
@@ -97,6 +98,44 @@ public class SExpression {
             offset.incrementAndGet();
             column.incrementAndGet();
             char c = (char)i;
+            if (c == '\n') {
+                line.incrementAndGet();
+                column.set(0);
+                if (inLineComment) {
+                    inLineComment = false;
+                } else {
+                    if (quoted) {
+                        if (atom == null) {
+                            atom = new StringBuilder();
+                        }
+
+                        atom.append(c);
+                    } else {
+                        if (atom != null) {
+                            l.add(atom.toString());
+                            atom = null;
+                        }
+                    }
+                }
+
+                continue;
+            } else if (inLineComment) {
+                continue;
+            } else if (c == ';') {
+                char next = (char)r.read();
+                if (next == ';') {
+                    inLineComment = true;
+                    if (atom != null) {
+                        l.add(atom.toString());
+                        atom = null;
+                    }
+
+                    continue;
+                } else {
+                    r.unread(next);
+                }
+            }
+
             if (c == '(') {
                 if (quoted) {
                     if (atom == null) {
@@ -135,12 +174,7 @@ public class SExpression {
                         return Collections.unmodifiableList(l);
                     }
                 }
-            } else if (c == ' ' || c == '\n' || c == '\t') {
-                if (c == '\n') {
-                    line.incrementAndGet();
-                    column.set(0);
-                }
-
+            } else if (c == ' ' || c == '\t') {
                 if (quoted) {
                     if (atom == null) {
                         atom = new StringBuilder();
@@ -207,13 +241,27 @@ public class SExpression {
     /**
      * Parse a stream into a list of S-expressions.
      *
+     * @param r a PushbackReader to read from
+     * @return an Object or a List of parsed S-expressions. If the string is a single atom, it will be returned as a String,
+     * Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
+     * The sequence ';;' marks a comment until the end of line.
+     * @throws ParseException if the String does not represent a legal S-expression
+     */
+    public static Object parse(PushbackReader r) throws ParseException, IOException {
+        return parse(r, new AtomicInteger(1), new AtomicInteger(), new AtomicInteger(), false);
+    }
+
+    /**
+     * Parse a stream into a list of S-expressions.
+     *
      * @param r a Reader to read from
      * @return an Object or a List of parsed S-expressions. If the string is a single atom, it will be returned as a String,
      * Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
+     * The sequence ';;' marks a comment until the end of line.
      * @throws ParseException if the String does not represent a legal S-expression
      */
     public static Object parse(Reader r) throws ParseException, IOException {
-        return parse(r, new AtomicInteger(1), new AtomicInteger(), new AtomicInteger(), false);
+        return parse(new PushbackReader(r), new AtomicInteger(1), new AtomicInteger(), new AtomicInteger(), false);
     }
 
     /**
@@ -222,6 +270,7 @@ public class SExpression {
      * @param s the String to parse
      * @return an Object or a List of parsed S-expressions. If the string is a single atom, it will be returned as a String,
      * Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
+     * The sequence ';;' marks a comment until the end of line.
      * @throws ParseException if the String does not represent a legal S-expression
      */
     public static Object parse(String s) throws ParseException {
