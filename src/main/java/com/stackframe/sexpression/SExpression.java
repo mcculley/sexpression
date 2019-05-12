@@ -91,6 +91,7 @@ public class SExpression {
                                 boolean hasParent) throws IOException, ParseException {
         boolean quoted = false;
         boolean inLineComment = false;
+        int blockCommentDepth = 0;
         List<Object> l = new ArrayList<>();
         StringBuilder atom = null;
         int i;
@@ -121,6 +122,19 @@ public class SExpression {
                 continue;
             } else if (inLineComment) {
                 continue;
+            } else if (c == '(') {
+                char next = (char)r.read();
+                if (next == ';') {
+                    blockCommentDepth++;
+                    if (atom != null) {
+                        l.add(atom.toString());
+                        atom = null;
+                    }
+
+                    continue;
+                } else {
+                    r.unread(next);
+                }
             } else if (c == ';') {
                 char next = (char)r.read();
                 if (next == ';') {
@@ -131,9 +145,14 @@ public class SExpression {
                     }
 
                     continue;
+                } else if (next == ')') {
+                    blockCommentDepth--;
+                    continue;
                 } else {
                     r.unread(next);
                 }
+            } else if (blockCommentDepth > 0) {
+                continue;
             }
 
             if (c == '(') {
@@ -244,7 +263,7 @@ public class SExpression {
      * @param r a PushbackReader to read from
      * @return an Object or a List of parsed S-expressions. If the string is a single atom, it will be returned as a String,
      * Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
-     * The sequence ';;' marks a comment until the end of line.
+     * The sequence ';;' marks a comment until the end of line. The sequences, '(;' and ';)' indicate block comments, which can be nested.
      * @throws ParseException if the String does not represent a legal S-expression
      */
     public static Object parse(PushbackReader r) throws ParseException, IOException {
@@ -257,7 +276,7 @@ public class SExpression {
      * @param r a Reader to read from
      * @return an Object or a List of parsed S-expressions. If the string is a single atom, it will be returned as a String,
      * Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
-     * The sequence ';;' marks a comment until the end of line.
+     * The sequence ';;' marks a comment until the end of line. The sequences, '(;' and ';)' indicate block comments, which can be nested.
      * @throws ParseException if the String does not represent a legal S-expression
      */
     public static Object parse(Reader r) throws ParseException, IOException {
@@ -270,7 +289,7 @@ public class SExpression {
      * @param s the String to parse
      * @return an Object or a List of parsed S-expressions. If the string is a single atom, it will be returned as a String,
      * Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
-     * The sequence ';;' marks a comment until the end of line.
+     * The sequence ';;' marks a comment until the end of line. The sequences, '(;' and ';)' indicate block comments, which can be nested.
      * @throws ParseException if the String does not represent a legal S-expression
      */
     public static Object parse(String s) throws ParseException {
