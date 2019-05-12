@@ -74,6 +74,12 @@ public class SExpressionTest {
     }
 
     @Test
+    public void testNestedNoSpace() throws ParseException {
+        assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "if", Collections.singletonList("then"))),
+                     SExpression.parse("(foo bar if(then))"));
+    }
+
+    @Test
     public void testInteger() throws ParseException {
         assertEquals(Collections.singletonList(Arrays.asList("foo", new Long(12))), SExpression.parse("(foo 12)"));
     }
@@ -122,13 +128,6 @@ public class SExpressionTest {
                                             Arrays.asList("local.get", "$i")),
                               Arrays.asList("i32.load8_s", Arrays.asList("i32.const", Long.valueOf(8)))));
         assertEquals(expected, parsed);
-    }
-
-    @Test
-    public void testBadToken() {
-        ParseException e = assertThrows(ParseException.class, () -> SExpression.parse("(foo bar baz() buzz)"));
-        assertEquals("unexpected ( inside token starting with \"baz\"", e.getMessage());
-        assertEquals(12, e.getErrorOffset());
     }
 
     @Test

@@ -170,9 +170,8 @@ public class SExpression {
                     atom.append(c);
                 } else {
                     if (atom != null) {
-                        throw new ParseException(String.format("unexpected ( inside token starting with \"%s\"", atom),
-                                                 offset.get() - 1, line.get(),
-                                                 column.get());
+                        l.add(atom.toString());
+                        atom = null;
                     }
 
                     l.add(parse(r, line, column, offset, true));
@@ -274,7 +273,7 @@ public class SExpression {
      *
      * @param r a PushbackReader to read from
      * @return an Object or a List of parsed S-expressions. If the string is a single atom, it will be returned as a String,
-     * Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
+     * BigInteger, Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
      * The sequence ';;' marks a comment until the end of line. The sequences, '(;' and ';)' indicate block comments, which can be nested.
      * @throws ParseException if the String does not represent a legal S-expression
      */
@@ -287,7 +286,7 @@ public class SExpression {
      *
      * @param r a Reader to read from
      * @return an Object or a List of parsed S-expressions. If the string is a single atom, it will be returned as a String,
-     * Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
+     * BigInteger, Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
      * The sequence ';;' marks a comment until the end of line. The sequences, '(;' and ';)' indicate block comments, which can be nested.
      * @throws ParseException if the String does not represent a legal S-expression
      */
@@ -300,7 +299,7 @@ public class SExpression {
      *
      * @param s the String to parse
      * @return an Object or a List of parsed S-expressions. If the string is a single atom, it will be returned as a String,
-     * Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
+     * BigInteger, Long, or Double. For each parsed S-expression, the Object will be a String, Long, Double, or List of such, recursively.
      * The sequence ';;' marks a comment until the end of line. The sequences, '(;' and ';)' indicate block comments, which can be nested.
      * @throws ParseException if the String does not represent a legal S-expression
      */
