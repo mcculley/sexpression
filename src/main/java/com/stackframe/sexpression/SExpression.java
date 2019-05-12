@@ -27,6 +27,7 @@ package com.stackframe.sexpression;
  */
 
 import java.io.*;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,7 +80,12 @@ public class SExpression {
 
     private static Object box(String s) {
         if (isInteger(s)) {
-            return Long.valueOf(s);
+            BigInteger i = new BigInteger(s);
+            if (i.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) > 0) {
+                return i;
+            } else {
+                return Long.valueOf(i.longValue());
+            }
         } else if (isFloat(s)) {
             return Double.valueOf(s);
         } else {
@@ -184,7 +190,13 @@ public class SExpression {
                     }
 
                     if (atom != null) {
-                        l.add(box(atom.toString()));
+                        try {
+                            l.add(box(atom.toString()));
+                        } catch (NumberFormatException e) {
+                            throw new ParseException(String.format("could not parse number '%s'", atom), offset.get() - 1,
+                                                     line.get(),
+                                                     column.get());
+                        }
                     }
 
                     if (l.isEmpty()) {
@@ -244,7 +256,7 @@ public class SExpression {
             } else {
                 b.append(e);
             }
-        } else if (e instanceof Long || e instanceof Double) {
+        } else if (e instanceof Long || e instanceof Double || e instanceof BigInteger) {
             b.append(e);
         } else if (e instanceof List) {
             b.append('(');

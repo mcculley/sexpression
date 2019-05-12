@@ -29,6 +29,7 @@ package com.stackframe.sexpression;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -237,6 +238,12 @@ public class SExpressionTest {
     public void testCombinedComment2() throws ParseException {
         assertEquals(Collections.singletonList(Arrays.asList("foo", "bar", "baz", "buzz", "fuzz")),
                      SExpression.parse("(foo bar baz (;comment (;comment;) comment;);;comment\n buzz fuzz)"));
+    }
+
+    @Test
+    public void testBigNumber() throws ParseException {
+        assertEquals(Collections.singletonList(Arrays.asList(new BigInteger("18446744073709551615"))),
+                     SExpression.parse("(18446744073709551615)"));
     }
 
     // FIXME: Need to handle escape with '\' (or some other character).
